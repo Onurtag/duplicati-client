@@ -1158,7 +1158,7 @@ def import_backup(data, import_file, backup_id=None, import_meta=None):
         return
 
     # Load the import file
-    with open(import_file, 'r', encoding="UTF-8") as file_handle:
+    with open(import_file, 'r') as file_handle:
         extension = splitext(import_file)[1]
         if extension.lower() in ['.yml', '.yaml']:
             try:
