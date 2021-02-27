@@ -7,7 +7,8 @@ from dateutil import tz
 
 
 # Helper function for formatting timestamps for humans
-def format_time(time_string, precise=False):
+def format_time(data, time_string):
+    precise = data.get("precise", False)
     # Ensure it's a string
     time_string = str(time_string)
 
@@ -27,17 +28,8 @@ def format_time(time_string, precise=False):
         return datetime_object.strftime("%I:%M:%S %p %d/%m/%Y")
 
     # Now for comparison
-    now = datetime.datetime.now()
-
-    try:
-        # Take care of timezones
-        now = now.replace(tzinfo=tz.tzutc())
-        now = now.astimezone(tz.tzlocal())
-        datetime_object = datetime_object.replace(tzinfo=tz.tzutc())
-        datetime_object = datetime_object.astimezone(tz.tzlocal())
-    except Exception as exc:
-        common.log_output(exc, False)
-        return None
+    now = datetime.datetime.now().replace(tzinfo=tz.tzutc())
+    datetime_object = datetime_object.replace(tzinfo=tz.tzutc())
 
     # Get the delta
     if datetime_object > now:

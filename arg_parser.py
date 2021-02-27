@@ -245,6 +245,12 @@ verbose_parser = subparsers.add_parser('verbose', help=message)
 choices = ["enable", "disable"]
 verbose_parser.add_argument('mode', nargs='?', choices=choices)
 
+# Subparser for toggling precise time mode
+message = "change between short and precise time format"
+precise_parser = subparsers.add_parser('precise', help=message)
+choices = ["enable", "disable"]
+precise_parser.add_argument('mode', nargs='?', choices=choices)
+
 # Subparser for setting a parameter file
 message = "import parameters from a YAML file"
 params_parser = subparsers.add_parser('params', help=message)
@@ -253,3 +259,14 @@ params_parser.add_argument('param-file', nargs='?', help=message)
 message = "disable the parameters file"
 params_parser.add_argument('--disable', help=message, action='store_true')
 params_parser.add_argument('--show', help=message, action='store_true')
+
+# Subparser for pause
+message = "pause Duplicati server"
+pause_parser = subparsers.add_parser('pause', help=message)
+message = "duration before resume (e.g. 5m, 1h or empty for unlimited)"
+pause_parser.add_argument('--duration', default="", help=message)
+
+# Subparser for resume
+message = "resume paused Duplicati server"
+resume_parser = subparsers.add_parser('resume', help=message)
+
