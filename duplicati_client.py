@@ -295,6 +295,7 @@ def validate_database_exists(data, db_path):
     verify = data.get("server", {}).get("verify", True)
     r = requests.post(baseurl, headers=headers, params=payload,
                       cookies=cookies, verify=verify)
+    r.encoding = "utf-8-sig"
     common.check_response(data, r.status_code)
     if r.status_code != 200:
         return False
@@ -309,6 +310,7 @@ def fetch_resource_list(data, resource):
     headers = common.create_headers(data)
     verify = data.get("server", {}).get("verify", True)
     r = requests.get(baseurl, headers=headers, cookies=cookies, verify=verify)
+    r.encoding = "utf-8-sig"
     common.check_response(data, r.status_code)
     if r.status_code == 404:
         common.log_output("No entries found", True, r.status_code)
@@ -433,6 +435,7 @@ def fetch_notifications(data, notification_ids, method):
     verify = data.get("server", {}).get("verify", True)
     notification_list = []
     r = requests.get(baseurl, headers=headers, cookies=cookies, verify=verify)
+    r.encoding = "utf-8-sig"
     common.check_response(data, r.status_code)
     if r.status_code != 200:
         id_list = ', '.join(notification_ids)
@@ -491,6 +494,7 @@ def fetch_backups(data, backup_ids, method):
     for backup_id in backup_ids:
         r = requests.get(baseurl + str(backup_id), headers=headers,
                          cookies=cookies, verify=verify)
+        r.encoding = "utf-8-sig"
         common.check_response(data, r.status_code)
         if r.status_code != 200:
             message = "Error getting backup " + str(backup_id)
@@ -520,6 +524,7 @@ def fetch_server_state(data):
     headers = common.create_headers(data)
     verify = data.get("server", {}).get("verify", True)
     r = requests.get(baseurl, headers=headers, cookies=cookies, verify=verify)
+    r.encoding = "utf-8-sig"
     if r.status_code != 200:
         server_state = {}
     else:
@@ -536,6 +541,7 @@ def fetch_progress_state(data):
     verify = data.get("server", {}).get("verify", True)
     # Check progress state and get info for the running backup
     r = requests.get(baseurl, headers=headers, cookies=cookies, verify=verify)
+    r.encoding = "utf-8-sig"
     if r.status_code != 200:
         active_id = -1
         progress_state = {}
@@ -707,6 +713,7 @@ def get_backup_logs(data, backup_id, log_type, page_size=5, show_all=False):
 
     r = requests.get(baseurl, headers=headers, cookies=cookies, params=params,
                      verify=verify)
+    r.encoding = "utf-8-sig"
     common.check_response(data, r.status_code)
     if r.status_code == 500:
         message = "Error getting log, "
@@ -762,6 +769,7 @@ def get_live_logs(data, level, page_size=5, first_id=0):
 
     r = requests.get(baseurl, headers=headers, cookies=cookies, params=params,
                      verify=verify)
+    r.encoding = "utf-8-sig"
     common.check_response(data, r.status_code)
     if r.status_code == 500:
         message = "Error getting log, "
@@ -796,6 +804,7 @@ def get_stored_logs(data, page_size=5, show_all=False):
 
     r = requests.get(baseurl, headers=headers, cookies=cookies, params=params,
                      verify=verify)
+    r.encoding = "utf-8-sig"
     common.check_response(data, r.status_code)
     if r.status_code == 500:
         message = "Error getting log, "
@@ -859,6 +868,7 @@ def run_backup(data, backup_id):
     headers = common.create_headers(data)
     verify = data.get("server", {}).get("verify", True)
     r = requests.post(baseurl, headers=headers, cookies=cookies, verify=verify)
+    r.encoding = "utf-8-sig"
     common.check_response(data, r.status_code)
     if r.status_code != 200:
         common.log_output("Error scheduling backup ", True, r.status_code)
@@ -876,6 +886,7 @@ def abort_task(data, task_id):
     headers = common.create_headers(data)
     verify = data.get("server", {}).get("verify", True)
     r = requests.post(baseurl, headers=headers, cookies=cookies, verify=verify)
+    r.encoding = "utf-8-sig"
     common.check_response(data, r.status_code)
     if r.status_code != 200:
         common.log_output("Error aborting task ", True, r.status_code)
@@ -922,6 +933,7 @@ def delete_backup(data, backup_id, confirm=False, delete_db=False):
 
     r = requests.delete(baseurl, headers=headers, cookies=cookies,
                         params=payload, verify=verify)
+    r.encoding = "utf-8-sig"
     common.check_response(data, r.status_code)
     if r.status_code != 200:
         common.log_output("Error deleting backup", True, r.status_code)
@@ -957,6 +969,7 @@ def delete_database(data, backup_id, confirm=False, recreate=False):
 
     r = requests.post(baseurl, headers=headers, cookies=cookies,
                       verify=verify)
+    r.encoding = "utf-8-sig"
     common.check_response(data, r.status_code)
     if r.status_code != 200:
         common.log_output("Error deleting database", True, r.status_code)
@@ -1009,6 +1022,7 @@ def call_backup_subcommand(data, url, fail_message, success_message):
     verify = data.get("server", {}).get("verify", True)
     r = requests.post(baseurl, headers=headers, cookies=cookies,
                       verify=verify)
+    r.encoding = "utf-8-sig"
     common.check_response(data, r.status_code)
     if r.status_code != 200:
         common.log_output(fail_message, True, r.status_code)
@@ -1027,6 +1041,7 @@ def delete_notification(data, notification_id):
     verify = data.get("server", {}).get("verify", True)
     r = requests.delete(baseurl, headers=headers, cookies=cookies,
                         verify=verify)
+    r.encoding = "utf-8-sig"
     common.check_response(data, r.status_code)
     if r.status_code == 404:
         common.log_output("Notification not found", True, r.status_code)
@@ -1051,6 +1066,7 @@ def update_backup(data, backup_id, backup_config, import_meta=True):
     payload = json.dumps(backup_config, default=str)
     r = requests.put(baseurl, headers=headers, cookies=cookies,
                      data=payload, verify=verify)
+    r.encoding = "utf-8-sig"
     common.check_response(data, r.status_code)
     if r.status_code == 404:
         common.log_output("Backup not found", True, r.status_code)
@@ -1268,6 +1284,7 @@ def import_backup(data, import_file, backup_id=None, import_meta=None):
     verify = data.get("server", {}).get("verify", True)
     r = requests.post(baseurl, files=files, cookies=cookies, data=payload,
                       verify=verify)
+    r.encoding = "utf-8-sig"
     common.check_response(data, r.status_code)
     # Code for extracting error messages posted with inline javascript
     # and with 200 OK http status code, preventing us from detecting
@@ -1309,6 +1326,7 @@ def create_backup_export(data, backup_id, output, path, export_passwords, timest
     headers = common.create_headers(data)
     verify = data.get("server", {}).get("verify", True)
     r = requests.get(baseurl, headers=headers, cookies=cookies, verify=verify)
+    r.encoding = "utf-8-sig"
     common.check_response(data, r.status_code)
     if r.status_code == 404:
         common.log_output("Backup not found", True, r.status_code)
